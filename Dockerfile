@@ -6,7 +6,7 @@ WORKDIR /opt
 ADD requirements.txt ./
 RUN pip install -r requirements.txt 
 
-ADD km-scrape-usage.py requirements.txt process.sh  ./
+ADD km-scrape-usage.py process.sh  ./
 
 ENTRYPOINT [ "/bin/bash", "/opt/process.sh" ]
 
