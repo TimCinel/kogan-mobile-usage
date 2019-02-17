@@ -5,7 +5,7 @@ import os
 import re
 import json
 
-def get_details(username, password):
+def get_details(account_alias, username, password):
 
     session = requests.Session()
 
@@ -14,6 +14,7 @@ def get_details(username, password):
     summary_text = get_summary(session).text
 
     usage_match = re.search(r'data-percent="([0-9]+)%"', summary_text)
+    quota_match = re.search(r' +([0-9]+GB)', summary_text)
     renew_match = re.search(r'Data renews on the midnight of ([0-9/]+)', summary_text)
 
     if usage_match is None:
@@ -23,8 +24,10 @@ def get_details(username, password):
         raise "Couldn't determine renewal date"
 
     return {
-        "usage": str(usage_match.group(1)),
-        "renew": str(renew_match.group(1)),
+        "account_alias": account_alias,
+        "used_percent": str(usage_match.group(1)),
+        "period_quota_gb": str(quota_match.group(1)),
+        "period_renews": str(renew_match.group(1)),
     }
 
 def get_summary(session):
@@ -49,4 +52,4 @@ def log_in(session, username, password):
 
     return session.post('https://accounts.koganmobile.com.au/customer/login', data=payload)
 
-print json.dumps(get_details(os.environ['KOGANMOBILE_USERNAME'], os.environ['KOGANMOBILE_PASSWORD']))
+print json.dumps(get_details(os.environ['KOGANMOBILE_ALIAS'], os.environ['KOGANMOBILE_USERNAME'], os.environ['KOGANMOBILE_PASSWORD']))
