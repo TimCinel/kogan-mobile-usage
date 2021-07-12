@@ -15,7 +15,7 @@ def get_details(account_alias, username, password):
 
     usage_match = re.search(r'data-percent="([0-9]+)%"', summary_text)
     quota_match = re.search(r' +([0-9]+GB)', summary_text)
-    renew_match = re.search(r'Data renews on the midnight of ([0-9/]+)', summary_text)
+    renew_match = re.search(r'Data renews on the midnight of[\r\n ]+([0-9/]+)', summary_text)
 
     if usage_match is None:
         raise "Couldn't determine usage"
